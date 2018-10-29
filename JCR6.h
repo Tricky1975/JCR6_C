@@ -1,11 +1,15 @@
 #ifndef __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
 #define __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
+
 #include <stdbool.h>
 
-bool jcr6_autodel = true;
-bool jcr6_yell = true;
-bool jcr6_crash = true;
-char * jcr6_error="";
+// extern
+extern bool jcr6_autodel;
+extern bool jcr6_yell;
+extern bool jcr6_crash;
+extern char * jcr6_error;
+
+
 
 // Entry mapping
 typedef struct{
@@ -62,7 +66,7 @@ typedef struct tjcr6_TDirDriveNode{
 } * jcr6_TDirDriveNode;
 
 typedef struct tjcr6_TDirDriveMap{
-	struct tjcr6_TDirDriveNode * first;
+	jcr6_TDirDriveNode first;
 } * jcr6_TDirDriveMap;
 
 
@@ -81,6 +85,7 @@ typedef struct tjcr6_TCompressionDriveMap{
 
 
 // function headers
+void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d);
 void jcr6_init(void);
 jcr6_TDir jcr6_Dir(char * myfile);
 void jcr6_free(jcr6_TDir j);
