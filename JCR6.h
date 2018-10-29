@@ -29,7 +29,18 @@ typedef struct{
 
 	} jcr6_TEntryMap;
 
+typedef struct {
+	jcr6_TEntryMap * Entries;
+} * jcr6_TDir;
 
-#define FOREACHENTRY(jdir) for(jcr6_EntryNode node=jdir->first;node->next!=NULL;node=node->next)
+
+#define FOREACHENTRY(jdir) for(jcr6_EntryNode node=jdir->Entries->first;node->next!=NULL;node=node->next)
+
+
+// Dir file base
+typedef struct {
+	bool (*recognize)(char * file);
+	jcr6_TDir (*dir)(char * file);
+} jcr6_TDirDriver;
 
 #endif
