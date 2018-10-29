@@ -57,3 +57,8 @@ dkms.conf
 ._*
 
 # MKL (not sure if this is gonna be used, but hey, it's always handy to set this from the start)
+MKL*
+*MKL*
+
+# Eclipse
+.project
