@@ -1,6 +1,8 @@
 #ifndef __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
 #define __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
+#include <stdbool.h>
 
+bool jcr6_autodel = true;
 
 // Entry mapping
 typedef struct{
@@ -15,11 +17,11 @@ typedef struct{
 
 } jcr6_TEntry;
 
-typedef struct{
+typedef struct tjcr6_TEntryNode{
 	char * id;
 	jcr6_TEntry * entry;
-	jcr6_TEntryNode * next;
-	jcr6_TEntryNode * prev;
+	struct tjcr6_TEntryNode * next;
+	struct tjcr6_TEntryNode * prev;
 } jcr6_TEntryNode;
 
 typedef struct{
@@ -28,5 +30,6 @@ typedef struct{
 	} jcr6_TEntryMap;
 
 
+#define FOREACHENTRY(jdir) for(jcr6_EntryNode node=jdir->first;node->next!=NULL;node=node->next)
 
 #endif
