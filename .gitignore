@@ -62,3 +62,9 @@ MKL*
 
 # Eclipse
 .project
+
+# Test
+test_JCR_MAC
+test_JCR_WINDOWS.exe
+test_JCR_LINUX
+
