@@ -37,10 +37,16 @@ typedef struct {
 #define FOREACHENTRY(jdir) for(jcr6_EntryNode node=jdir->Entries->first;node->next!=NULL;node=node->next)
 
 
-// Dir file base
+// Dir file base driver
 typedef struct {
 	bool (*recognize)(char * file);
 	jcr6_TDir (*dir)(char * file);
 } jcr6_TDirDriver;
+
+// Compression base driver
+typedef struct {
+	void (*compress)(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize);
+	void (*expand)(char * originalbuf,int originalsize,char * expandedbuf,int expandedsize);
+} jcr6_TCompressDriver;
 
 #endif
