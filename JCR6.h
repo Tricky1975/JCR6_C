@@ -3,6 +3,9 @@
 #include <stdbool.h>
 
 bool jcr6_autodel = true;
+bool jcr6_yell = true;
+bool jcr6_crash = true;
+char * jcr6_error="";
 
 // Entry mapping
 typedef struct{
@@ -47,12 +50,13 @@ typedef struct {
 typedef struct {
 	void (*compress)(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize);
 	void (*expand)(char * originalbuf,int originalsize,char * expandedbuf,int expandedsize);
-} jcr6_TCompressDriver;
+} * jcr6_TCompressDriver;
 
 
 // Driver map
 typedef struct tjcr6_TDirDriveNode{
 	char * id;
+	jcr6_TDirDriver Driver;
 	struct tjcr6_TDirDriveNode * next;
 	struct tjcr6_TDirDriveNode * prev;
 } * jcr6_TDirDriveNode;
@@ -60,12 +64,13 @@ typedef struct tjcr6_TDirDriveNode{
 typedef struct tjcr6_TDirDriveMap{
 	struct tjcr6_TDirDriveNode * first;
 } * jcr6_TDirDriveMap;
-#endif
+
 
 
 // Compression map
 typedef struct tjcr6_TCompressionDriveNode{
 	char * id;
+	jcr6_TCompressDriver Driver;
 	struct tjcr6_TCompressionDriveNode * next;
 	struct tjcr6_TCompressionDriveNode * prev;
 } * jcr6_TCompressionDriveNode;
@@ -73,4 +78,12 @@ typedef struct tjcr6_TCompressionDriveNode{
 typedef struct tjcr6_TCompressionDriveMap{
 	struct tjcr6_TCompressionDriveNode * first;
 } * jcr6_TCompressionDriveMap;
+
+
+// function headers
+jcr6_TDir jcr6_Dir(char * myfile);
+void jcr6_free(jcr6_TDir j);
+void jcr6_dispose(void);
+
+
 #endif
