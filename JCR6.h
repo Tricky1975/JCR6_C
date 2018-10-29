@@ -13,7 +13,7 @@ typedef struct{
 	char * storagemethod;
 	char * author;
 	char * notes;
-	// TODO: config map could be added in future versions, as it could deal with the stuff outside the default JCR6 scope.
+	// TODO: Config map could be added in future versions, as it could deal with the stuff outside the default JCR6 scope.
 
 } jcr6_TEntry;
 
@@ -48,5 +48,7 @@ typedef struct {
 	void (*compress)(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize);
 	void (*expand)(char * originalbuf,int originalsize,char * expandedbuf,int expandedsize);
 } jcr6_TCompressDriver;
+
+
 
 #endif
