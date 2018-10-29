@@ -81,6 +81,7 @@ typedef struct tjcr6_TCompressionDriveMap{
 
 
 // function headers
+void jcr6_init(void);
 jcr6_TDir jcr6_Dir(char * myfile);
 void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);

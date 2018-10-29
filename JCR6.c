@@ -34,7 +34,12 @@ jcr6_TDir jcr6_Dir(char * myfile){
 
 }
 
-/// Free JCR dir (and all data it contains in sub branches)
+// Init JCR6 and make sure the default drivers are all in!
+void jcr6_init(){
+
+}
+
+// Free JCR dir (and all data it contains in sub branches)
 void jcr6_free(jcr6_TDir j){
 
 }
