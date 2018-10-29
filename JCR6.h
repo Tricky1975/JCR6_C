@@ -61,3 +61,16 @@ typedef struct tjcr6_TDirDriveMap{
 	tjcr6_TDirDriveNode first;
 } * jcr6_TDirDriveMap;
 #endif
+
+
+// Compression map
+typedef struct tjcr6_TCompressionDriveNode{
+	char * id;
+	struct tjcr6_TCompressionDriveNode * next;
+	struct tjcr6_TCompressionDriveNode * prev;
+} * jcr6_TCompressionDriveNode;
+
+typedef struct tjcr6_TCompressionDriveMap{
+	tjcr6_TCompressionDriveNode first;
+} * jcr6_TCompressionDriveMap;
+#endif
