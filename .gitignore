@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+# Mac shit
+.DS_Store
+._*
+
+# MKL (not sure if this is gonna be used, but hey, it's always handy to set this from the start)
