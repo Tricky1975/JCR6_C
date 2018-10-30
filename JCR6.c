@@ -195,7 +195,7 @@ jcr6_TDir jcr6_Dir(char * myfile){
 void jcr6_init(void){
 	chat("JCR6 start up");
 	chat("Allocating memory for compression algorithm drivers");
-	Drivers = malloc(sizeof(struct tjcr6_TDirDriveMap));
+	Drivers = malloc(sizeof(struct tjcr6_TCompressDriveMap));
 	Drivers->first=NULL;
 	chat("Allocating memory for Store");
 	jcr6_TCompressDriver Store = jcr_newCompressDriver;
@@ -204,6 +204,8 @@ void jcr6_init(void){
 	Store->expand=&store_expand;
 	chat("= Registering");
 	jcr6_registercompressiondriver("Store",Store);
+	chat("Allocating memory for compression algorithm drivers");
+	DirDrivers = malloc(sizeof(struct tjcr6_TDirDriveMap));
 	chat("JCR6 file setup driver");
 	jcr6_TDirDriver DJCR=malloc(sizeof(struct tjcr6_TDirDriver));
 	DJCR->recognize=recognize_jcr6;
