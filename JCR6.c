@@ -114,7 +114,7 @@ void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
 	jcr6_TDirDriveNode ndrv;
 	if (DirDrivers->first==NULL){
 		chat("FIRST DIR DRIVER NODE!");
-		ndrv=newDirDriverNode(); chat("= Allocated");
+		ndrv=newDirDriveNode(); chat("= Allocated");
 		ndrv->Driver=d; chat("= Assigned");
 		strcpy(ndrv->id,id); chat("= ID");
 		DirDrivers->first=ndrv; chat("= In first node");
