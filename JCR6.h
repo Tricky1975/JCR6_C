@@ -81,7 +81,7 @@ typedef struct {
 // Driver map
 typedef struct tjcr6_TDirDriveNode{
 	char id[10];
-	jcr6_TDirDriver *Driver;
+	jcr6_TDirDriver Driver;
 	struct tjcr6_TDirDriveNode * next;
 	struct tjcr6_TDirDriveNode * prev;
 } * jcr6_TDirDriveNode;
