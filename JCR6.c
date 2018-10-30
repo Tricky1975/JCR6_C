@@ -42,8 +42,8 @@ static void mchat(int num,...){
 
 
 // Driver map
-static jcr6_TCompressionDriveMap Drivers;
-static jcr6_TDirDriveMap DirDrivers;
+static jcr6_TCompressionDriveMap Drivers = NULL;
+static jcr6_TDirDriveMap DirDrivers = NULL;
 
 // Store Driver functions
 static void store_compress(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize){
@@ -84,7 +84,36 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	}
 	//char * dbg;
 	//sprintf(dbg,"Registered compression algorithm %s",id);
-	mchat(2,"Registered: ",id);
+	mchat(2,"Registered storage: ",id);
+}
+
+void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
+	jcr6_TCompressionDriveNode ndrv;
+	if (DirDrivers->first==NULL){
+		chat("FIRST DIR DRIVER NODE!");
+		ndrv=newDirDriverNode(); chat("= Allocated");
+		ndrv->Driver=d; chat("= Assigned");
+		strcpy(ndrv->id,id); chat("= ID");
+		DirDrivers->first=ndrv; chat("= In first node");
+		ndrv->next=NULL; chat("= NULLED next");
+		ndrv->prev=NULL; chat("= NULLED prev");
+		chat("First node creation done!");
+	} else {
+		chat("Checking dir driver nodes");
+		for(jcr6_TDirDriveNode drv=DirDrivers->first; drv!=NULL; drv=drv->next){
+			if (strcmp(drv->id,id)==0) { yell("Duplicate dir driver!"); return; }
+			ndrv=drv;
+		}
+		ndrv->next=newDirDriverNode();
+		strcpy(ndrv->next->id,id);
+		ndrv->next->Driver=d;
+		ndrv->next->prev=ndrv;
+		ndrv->next->next=NULL;
+	}
+	//char * dbg;
+	//sprintf(dbg,"Registered compression algorithm %s",id);
+	mchat(2,"Registered dir: ",id);
+
 }
 
 static void yell(char *errormessage){
@@ -96,20 +125,34 @@ static void yell(char *errormessage){
 	}
 }
 
+// Recognize a standard JCR6 file
+bool recognize_jcr6(char * file){
+	char header[5] = {'J','C','R','6',26};
+	char readheader[5];
+	FILE * bt = fopen(file,"rb");
+	fgets(readheader,5,(FILE*)bt);
+	fclose(bt);
+	for (int i=0; i<5; i++){
+		if (header[i]!=readheader[i]) return false;
+	}
+	return true;
+}
+
+
 bool jcr6_Recognize(char * recas[10],char * myfile){
-	//char ret[10] = "NONE";
+	mchat(2,"Recognize:",myfile);
 	*recas="NONE";
-	if (Drivers==NULL) {
+	if (DirDrivers==NULL) {
 		yell("No directory drivers loaded. Has JCR6 been properly initialized?\n");
 		return false;
 	}
-	if (Drivers->first==NULL){
+	if (DirDrivers->first==NULL){
 		yell("Directory driver map empty. Has JCR6 been properly initialized?\n");
 		return false;
 	}
 	bool rv=false;
 	for(jcr6_TDirDriveNode node=DirDrivers->first;node!=NULL;node=node->next){
-		if (node->Driver.recognize(myfile)) {
+		if (node->Driver->recognize(myfile)) {
 			strcpy(*recas, node->id); rv=true;
 		}
 	}

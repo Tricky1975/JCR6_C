@@ -46,10 +46,10 @@ typedef struct {
 
 
 // Dir file base driver
-typedef struct {
+typedef struct tjcr6_TDirDriver {
 	bool (*recognize)(char * file);
 	jcr6_TDir (*dir)(char * file);
-} jcr6_TDirDriver;
+} * jcr6_TDirDriver;
 
 // Compression base driver
 typedef struct {
@@ -61,7 +61,7 @@ typedef struct {
 // Driver map
 typedef struct tjcr6_TDirDriveNode{
 	char id[10];
-	jcr6_TDirDriver Driver;
+	jcr6_TDirDriver *Driver;
 	struct tjcr6_TDirDriveNode * next;
 	struct tjcr6_TDirDriveNode * prev;
 } * jcr6_TDirDriveNode;
@@ -84,8 +84,12 @@ typedef struct tjcr6_TCompressionDriveMap{
 	struct tjcr6_TCompressionDriveNode * first;
 } * jcr6_TCompressionDriveMap;
 
+
+
+
 // macro
 #define jcr_newCompressDriver malloc(sizeof(jcr6_TCompressDriver));
+#define jcr_newDirDriver malloc(sizeof(jcr6_TDirDriver));
 
 // function headers
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d);
