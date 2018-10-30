@@ -84,6 +84,8 @@ typedef struct tjcr6_TCompressionDriveMap{
 	struct tjcr6_TCompressionDriveNode * first;
 } * jcr6_TCompressionDriveMap;
 
+// macro
+#define jcr_newCompressDriver malloc(sizeof(jcr6_TCompressDriver));
 
 // function headers
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d);
