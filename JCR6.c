@@ -55,14 +55,20 @@ static void store_expand(char * originalbuf,int originalsize,char * expandedbuf,
 	expandedbuf=originalbuf;
 }
 
+jcr6_TCompressionDriveNode newDriverNode(void){
+	return malloc(sizeof(struct tjcr6_TCompressionDriveNode));
+}
+
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	jcr6_TCompressionDriveNode ndrv;
 	if (Drivers->first==NULL){
 		chat("FIRST DRIVER NODE!");
-		ndrv=malloc(sizeof(jcr6_TCompressionDriveNode)); chat("= Allocated");
+		ndrv=newDriverNode(); chat("= Allocated");
 		ndrv->Driver=d; chat("= Assigned");
 		strcpy(ndrv->id,id); chat("= ID");
 		Drivers->first=ndrv; chat("= In first node");
+		ndrv->next=NULL; chat("= NULLED next");
+		ndrv->prev=NULL; chat("= NULLED prev");
 		chat("First node creation done!");
 	} else {
 		chat("Checking driver nodes");
@@ -70,10 +76,11 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 			if (strcmp(drv->id,id)==0) { yell("Duplicate string driver!"); return; }
 			ndrv=drv;
 		}
-		ndrv->next=malloc(sizeof(jcr6_TCompressionDriveNode));
+		ndrv->next=newDriverNode();
 		strcpy(ndrv->next->id,id);
 		ndrv->next->Driver=d;
 		ndrv->next->prev=ndrv;
+		ndrv->next->next=NULL;
 	}
 	//char * dbg;
 	//sprintf(dbg,"Registered compression algorithm %s",id);
@@ -134,12 +141,12 @@ void jcr6_dispose(void){
 	{
 		jcr6_TCompressionDriveNode last;
 		for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
-			free(drv->Driver); mchat(2,"Released: ",drv->id);
-			if (drv->prev!=NULL) free(drv->prev);
+			free(drv->Driver); drv->Driver=NULL; mchat(2,"Released Driver: ",drv->id);
+			if (drv->prev!=NULL) {free(drv->prev); drv->prev=NULL; chat("Prevnode release.");}
 			last=drv;
 		}
-		free(last);
-		free(Drivers);
+		free(last); chat("Lastnode release");
+		free(Drivers); chat("Driver release");
 	}
 
 }

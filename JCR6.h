@@ -60,7 +60,7 @@ typedef struct {
 
 // Driver map
 typedef struct tjcr6_TDirDriveNode{
-	char * id;
+	char id[10];
 	jcr6_TDirDriver Driver;
 	struct tjcr6_TDirDriveNode * next;
 	struct tjcr6_TDirDriveNode * prev;
@@ -74,7 +74,7 @@ typedef struct tjcr6_TDirDriveMap{
 
 // Compression map
 typedef struct tjcr6_TCompressionDriveNode{
-	char id[25];
+	char id[10];
 	jcr6_TCompressDriver Driver;
 	struct tjcr6_TCompressionDriveNode * next;
 	struct tjcr6_TCompressionDriveNode * prev;
