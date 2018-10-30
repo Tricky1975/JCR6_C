@@ -209,14 +209,27 @@ void jcr6_free(jcr6_TDir j){
 void jcr6_dispose(void){
 	// Unload compression drivers and the entire driver map
 	{
+		chat("Unloading compression drivers");
 		jcr6_TCompressionDriveNode last;
 		for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
-			free(drv->Driver); drv->Driver=NULL; mchat(2,"Released Driver: ",drv->id);
-			if (drv->prev!=NULL) {free(drv->prev); drv->prev=NULL; chat("Prevnode release.");}
+			free(drv->Driver); drv->Driver=NULL; mchat(2,"= Released Compression driver Driver: ",drv->id);
+			if (drv->prev!=NULL) {free(drv->prev); drv->prev=NULL; chat("= Prevnode release.");}
 			last=drv;
 		}
-		free(last); chat("Lastnode release");
-		free(Drivers); chat("Driver release");
+		free(last); chat("= Lastnode release");
+		free(Drivers); chat("= Driver map release");
+	}
+	// Unload dir drivers and the entire driver map
+	{
+		chat("Unloading dir drivers")
+		jcr6_TDirDriveNode last;
+		for(jcr6_TDirDriveNode drv=DirDrivers->first; drv!=NULL; drv=drv->next){
+			free(drv->Driver); drv->Driver=NULL; mchat(2,"= Released Dir Driver: ",drv->id);
+			if (drv->prev!=NULL) {free(drv->prev); drv->prev=NULL; chat("= Prevnode release.");}
+			last=drv;
+		}
+		free(last); chat("= Lastnode release");
+		free(Drivers Drivers); chat("= Driver map release");
 	}
 
 }
