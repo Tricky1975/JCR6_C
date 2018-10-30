@@ -2,7 +2,7 @@
 //   JCR6.h
 //   JCR6 for C
 //   version: 18.10.30
-//   Copyright (C) 2018 Header file for JCR6 library for C
+//   Copyright (C) 2018 Jeroen P. Broks
 //   This software is provided 'as-is', without any express or implied
 //   warranty.  In no event will the authors be held liable for any damages
 //   arising from the use of this software.
@@ -17,6 +17,7 @@
 //      misrepresented as being the original software.
 //   3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 #ifndef __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
 #define __JEROENS_COLLECTED_RESOURCE_VERSION_6_LOADED__
 
