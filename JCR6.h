@@ -72,7 +72,7 @@ typedef struct tjcr6_TDirDriver {
 } * jcr6_TDirDriver;
 
 // Compression base driver
-typedef struct {
+typedef struct tjcr6_TCompressDriver {
 	void (*compress)(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize);
 	void (*expand)(char * originalbuf,int originalsize,char * expandedbuf,int expandedsize);
 } * jcr6_TCompressDriver;

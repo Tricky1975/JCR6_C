@@ -160,15 +160,20 @@ bool recognize_jcr6(char * file){
 	}
 	return true;
 }
+jcr6_TDir dir_jcr6(char * myfile){
+	return NULL;
+}
 
 
 bool jcr6_Recognize(char * recas[10],char * myfile){
 	mchat(2,"Recognize:",myfile);
 	*recas="NONE";
+	chat("= Drivers loaded at all?");
 	if (DirDrivers==NULL) {
 		yell("No directory drivers loaded. Has JCR6 been properly initialized?\n");
 		return false;
 	}
+	chat("= Drivers properly initiated?");
 	if (DirDrivers->first==NULL){
 		yell("Directory driver map empty. Has JCR6 been properly initialized?\n");
 		return false;
@@ -197,8 +202,14 @@ void jcr6_init(void){
 	chat("Store storage functions are being added");
 	Store->compress=&store_compress;
 	Store->expand=&store_expand;
-	chat("Registering");
+	chat("= Registering");
 	jcr6_registercompressiondriver("Store",Store);
+	chat("JCR6 file setup driver");
+	jcr6_TDirDriver DJCR=malloc(sizeof(struct tjcr6_TDirDriver));
+	DJCR->recognize=recognize_jcr6;
+	DJCR->dir=dir_jcr6;
+	chat("= Registering");
+	jcr6_registerdirdriver("JCR6",DJCR);
 }
 
 // Free JCR dir (and all data it contains in sub branches)
