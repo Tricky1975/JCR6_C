@@ -26,9 +26,9 @@ int main(void){
 	jcr6_chat=true; // This is a debugging session after all!
 	printf(" node = %ld\n",sizeof( jcr6_TCompressionDriveNode));
 	printf("*node = %ld\n",sizeof(struct tjcr6_TCompressionDriveNode));
-	char * rc[10];
+	char  rc[10];
 	jcr6_init();
-	bool rb = jcr6_Recognize(rc,"test.jcr");
-	printf("Recognise success %d => %s",rb,*rc);
+	bool rb = jcr6_Recognize("test.jcr");
+	printf("\n\nRecognise success %d => %s\n\n",rb,jcr6_recas);
 	jcr6_dispose();
 }

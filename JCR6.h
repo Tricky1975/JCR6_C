@@ -23,12 +23,6 @@
 
 #include <stdbool.h>
 
-// extern
-extern bool jcr6_autodel;
-extern bool jcr6_yell;
-extern bool jcr6_crash;
-extern bool jcr6_chat;
-extern char * jcr6_error;
 
 
 
@@ -117,7 +111,16 @@ void jcr6_init(void);
 jcr6_TDir jcr6_Dir(char * myfile);
 void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);
-bool jcr6_Recognize(char * recas[10],char * myfile);
+bool jcr6_Recognize(char * myfile);
+
+// extern vars
+extern bool jcr6_autodel;
+extern bool jcr6_yell;
+extern bool jcr6_crash;
+extern bool jcr6_chat;
+extern char * jcr6_error;
+extern char * jcr6_recas;
+extern jcr6_TDirDriver jcr6_recdrv;
 
 
 #endif

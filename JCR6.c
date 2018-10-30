@@ -30,6 +30,8 @@ bool jcr6_yell = true;
 bool jcr6_crash = true;
 bool jcr6_chat = false;
 char * jcr6_error = "";
+char * jcr6_recas = "NVRCHECK";
+jcr6_TDirDriver jcr6_recdrv;
 
 
 // internal header (for private stuff only)
@@ -151,13 +153,16 @@ static void yell(char *errormessage){
 // Recognize a standard JCR6 file
 bool recognize_jcr6(char * file){
 	char header[5] = {'J','C','R','6',26};
-	char readheader[5];
+	char readheader[6];
+	mchat(2,"= Trying to recognize file: ",file);
 	FILE * bt = fopen(file,"rb");
-	fgets(readheader,5,(FILE*)bt);
+	fgets(readheader,6,(FILE*)bt);
 	fclose(bt);
 	for (int i=0; i<5; i++){
+		if (jcr6_chat){ printf("\tpos %d; readvalue: %3d; truevalue: %3d\n",i,readheader[i],header[i]); }
 		if (header[i]!=readheader[i]) return false;
 	}
+	chat("= All cool!");
 	return true;
 }
 jcr6_TDir dir_jcr6(char * myfile){
@@ -165,9 +170,9 @@ jcr6_TDir dir_jcr6(char * myfile){
 }
 
 
-bool jcr6_Recognize(char * recas[10],char * myfile){
+bool jcr6_Recognize(char * myfile){
 	mchat(2,"Recognize:",myfile);
-	*recas="NONE";
+	jcr6_recas="NONE";
 	chat("= Drivers loaded at all?");
 	if (DirDrivers==NULL) {
 		yell("No directory drivers loaded. Has JCR6 been properly initialized?\n");
@@ -180,8 +185,20 @@ bool jcr6_Recognize(char * recas[10],char * myfile){
 	}
 	bool rv=false;
 	for(jcr6_TDirDriveNode node=DirDrivers->first;node!=NULL;node=node->next){
+		mchat(2,"\t\t\tCHECKING: ",node->id);
 		if (node->Driver->recognize(myfile)) {
-			strcpy(*recas, node->id); rv=true;
+			chat("= Setting");
+			jcr6_recas= node->id;
+			jcr6_recdrv=node->Driver;
+			/*
+			for(int i=0;i<10 && node->id[i]!=0;i++) {
+				chat("c");
+				printf("%d %d %s\n",i,node->id[i],node->id);
+				recas[i]=node->id[i];
+			}
+			*/
+			chat("= SET!");
+			rv=true;
 		}
 	}
 	return rv;
