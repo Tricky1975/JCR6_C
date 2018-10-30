@@ -221,7 +221,7 @@ void jcr6_dispose(void){
 	}
 	// Unload dir drivers and the entire driver map
 	{
-		chat("Unloading dir drivers")
+		chat("Unloading dir drivers");
 		jcr6_TDirDriveNode last;
 		for(jcr6_TDirDriveNode drv=DirDrivers->first; drv!=NULL; drv=drv->next){
 			free(drv->Driver); drv->Driver=NULL; mchat(2,"= Released Dir Driver: ",drv->id);
@@ -229,7 +229,7 @@ void jcr6_dispose(void){
 			last=drv;
 		}
 		free(last); chat("= Lastnode release");
-		free(Drivers Drivers); chat("= Driver map release");
+		free(DirDrivers); chat("= Driver map release");
 	}
 
 }
