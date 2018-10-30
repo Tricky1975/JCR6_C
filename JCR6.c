@@ -57,17 +57,27 @@ static void store_expand(char * originalbuf,int originalsize,char * expandedbuf,
 
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	jcr6_TCompressionDriveNode ndrv;
-	for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
-		if (strcmp(drv->id,id)==0) { yell("Duplicate string driver!"); return; }
-		ndrv=drv;
+	if (Drivers->first==NULL){
+		chat("FIRST DRIVER NODE!");
+		ndrv=malloc(sizeof(jcr6_TCompressionDriveNode)); chat("= Allocated");
+		ndrv->Driver=d; chat("= Assigned");
+		strcpy(ndrv->id,id); chat("= ID");
+		Drivers->first=ndrv; chat("= In first node");
+		chat("First node creation done!");
+	} else {
+		chat("Checking driver nodes");
+		for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
+			if (strcmp(drv->id,id)==0) { yell("Duplicate string driver!"); return; }
+			ndrv=drv;
+		}
+		ndrv->next=malloc(sizeof(jcr6_TCompressionDriveNode));
+		strcpy(ndrv->next->id,id);
+		ndrv->next->Driver=d;
+		ndrv->next->prev=ndrv;
 	}
-	ndrv->next=malloc(sizeof(jcr6_TCompressionDriveNode));
-	strcpy(ndrv->next->id,id);
-	ndrv->next->Driver=d;
-	ndrv->next->prev=ndrv;
-	char * dbg;
-	sprintf(dbg,"Registered compression algorithm %s",id);
-	chat(dbg);
+	//char * dbg;
+	//sprintf(dbg,"Registered compression algorithm %s",id);
+	mchat(2,"Registered: ",id);
 }
 
 void yell(char *errormessage){
@@ -102,9 +112,15 @@ jcr6_TDir jcr6_Dir(char * myfile){
 // Init JCR6 and make sure the default drivers are all in!
 void jcr6_init(void){
 	chat("JCR6 start up");
+	chat("Allocating memory for compression algorithm drivers");
+	Drivers = malloc(sizeof(jcr6_TCompressionDriveMap));
+	Drivers->first=NULL;
+	chat("Allocating memory for Store");
 	jcr6_TCompressDriver Store = malloc(sizeof(jcr6_TCompressDriver));
+	chat("Store storage functions are being added");
 	Store->compress=&store_compress;
 	Store->expand=&store_expand;
+	chat("Registering");
 	jcr6_registercompressiondriver("Store",Store);
 }
 
