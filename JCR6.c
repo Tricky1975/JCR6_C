@@ -58,6 +58,9 @@ static void store_expand(char * originalbuf,int originalsize,char * expandedbuf,
 jcr6_TCompressionDriveNode newDriverNode(void){
 	return malloc(sizeof(struct tjcr6_TCompressionDriveNode));
 }
+jcr6_TDirDriveNode newDirDriveNode(void){
+	return malloc(sizeof(struct tjcr6_TDirDriveNode));
+}
 
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	jcr6_TCompressionDriveNode ndrv;
