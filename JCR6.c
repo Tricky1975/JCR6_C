@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include "JCR6.h"
 
 bool jcr6_autodel = true;
@@ -14,6 +15,7 @@ char * jcr6_error = "";
 // internal header (for private stuff only)
 static void yell(char *errormessage);
 static void chat(char *dbgchat);
+static void mchat(int num,...);
 
 
 
@@ -21,6 +23,20 @@ static void chat(char *dbgchat);
 static void chat(char *dbgchat){
 	if (jcr6_chat) {
 		printf("DEBUG: %s\n",dbgchat);
+	}
+}
+
+static void mchat(int num,...){
+	if (jcr6_chat){
+		va_list va;
+		//int num;
+		va_start(va, num);
+		printf("DEBUG:");
+		for (int i = 0; i < num; i++){
+			printf(" ");
+			printf("%s",va_arg(va,char *));
+		}
+		printf("\n");
 	}
 }
 
@@ -85,6 +101,7 @@ jcr6_TDir jcr6_Dir(char * myfile){
 
 // Init JCR6 and make sure the default drivers are all in!
 void jcr6_init(void){
+	chat("JCR6 start up");
 	jcr6_TCompressDriver Store = malloc(sizeof(jcr6_TCompressDriver));
 	Store->compress=&store_compress;
 	Store->expand=&store_expand;
@@ -97,6 +114,16 @@ void jcr6_free(jcr6_TDir j){
 }
 
 void jcr6_dispose(void){
-	// Freeing all used compression driver memory
+	// Unload compression drivers and the entire driver map
+	{
+		jcr6_TCompressionDriveNode last;
+		for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
+			free(drv->Driver); mchat(2,"Released: ",drv->id);
+			if (drv->prev!=NULL) free(drv->prev);
+			last=drv;
+		}
+		free(last);
+		free(Drivers);
+	}
 
 }
