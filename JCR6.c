@@ -127,7 +127,7 @@ void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
 			if (strcmp(drv->id,id)==0) { yell("Duplicate dir driver!"); return; }
 			ndrv=drv;
 		}
-		ndrv->next=newDirDriverNode();
+		ndrv->next=newDirDriveNode();
 		strcpy(ndrv->next->id,id);
 		ndrv->next->Driver=d;
 		ndrv->next->prev=ndrv;
