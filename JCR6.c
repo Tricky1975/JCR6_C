@@ -34,12 +34,18 @@ char * jcr6_recas = "NVRCHECK";
 jcr6_TDirDriver jcr6_recdrv;
 
 
+
 // internal header (for private stuff only)
 static void yell(char *errormessage);
 static void chat(char *dbgchat);
 static void mchat(int num,...);
 
-
+// JCR6 is a LittleEndian based file system, and I must make sure that on PPC too everything is read in LittleEndian, even when the CPU will calculate in BigEndian.
+bool IsLittleEndian () {
+    int i=1;
+    return (int)*((unsigned char *)&i)==1;
+}
+// Thanks to Robert Allan Hennigan Leahy for posting this on StackOverflow. ;)
 
 // debug chat
 static void chat(char *dbgchat){
