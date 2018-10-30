@@ -87,7 +87,7 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	mchat(2,"Registered: ",id);
 }
 
-void yell(char *errormessage){
+static void yell(char *errormessage){
 	strcpy(jcr6_error,errormessage);
 	if (jcr6_yell) printf("ERROR: %s!\n",errormessage);
 	if (jcr6_crash) {
@@ -96,20 +96,24 @@ void yell(char *errormessage){
 	}
 }
 
-char * jcr6_TRecognize(char * myfile){
-	char * ret = "NONE";
+bool jcr6_Recognize(char * recas[10],char * myfile){
+	//char ret[10] = "NONE";
+	*recas="NONE";
 	if (Drivers==NULL) {
 		yell("No directory drivers loaded. Has JCR6 been properly initialized?\n");
-		return ret;
+		return false;
 	}
 	if (Drivers->first==NULL){
 		yell("Directory driver map empty. Has JCR6 been properly initialized?\n");
-		return ret;
+		return false;
 	}
+	bool rv=false;
 	for(jcr6_TDirDriveNode node=DirDrivers->first;node!=NULL;node=node->next){
-		if (node->Driver.recognize(myfile)) strcpy(ret, node->id);
+		if (node->Driver.recognize(myfile)) {
+			strcpy(*recas, node->id); rv=true;
+		}
 	}
-	return ret;
+	return rv;
 }
 
 jcr6_TDir jcr6_Dir(char * myfile){
