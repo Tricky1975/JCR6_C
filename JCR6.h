@@ -7,6 +7,7 @@
 extern bool jcr6_autodel;
 extern bool jcr6_yell;
 extern bool jcr6_crash;
+extern bool jcr6_chat;
 extern char * jcr6_error;
 
 

@@ -7,11 +7,23 @@
 bool jcr6_autodel = true;
 bool jcr6_yell = true;
 bool jcr6_crash = true;
+bool jcr6_chat = false;
 char * jcr6_error = "";
 
 
-// yell header
-void yell(char *errormessage);
+// internal header (for private stuff only)
+static void yell(char *errormessage);
+static void chat(char *dbgchat);
+
+
+
+// debug chat
+static void chat(chat *dbgchat){
+	if (jcr6_chat) {
+
+	}
+}
+
 
 // Driver map
 static jcr6_TCompressionDriveMap Drivers;
