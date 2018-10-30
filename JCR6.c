@@ -18,9 +18,9 @@ static void chat(char *dbgchat);
 
 
 // debug chat
-static void chat(chat *dbgchat){
+static void chat(char *dbgchat){
 	if (jcr6_chat) {
-
+		printf("DEBUG: %s\n",dbgchat);
 	}
 }
 
@@ -49,7 +49,9 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	strcpy(ndrv->next->id,id);
 	ndrv->next->Driver=d;
 	ndrv->next->prev=ndrv;
-
+	char * dbg;
+	sprintf(dbg,"Registered compression algorithm %s",id);
+	chat(dbg);
 }
 
 void yell(char *errormessage){
