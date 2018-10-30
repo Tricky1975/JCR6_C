@@ -93,6 +93,7 @@ void jcr6_init(void);
 jcr6_TDir jcr6_Dir(char * myfile);
 void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);
+bool jcr6_Recognize(char * recas[10],char * myfile);
 
 
 #endif
