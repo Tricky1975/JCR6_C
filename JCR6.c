@@ -111,7 +111,7 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 }
 
 void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
-	jcr6_TCompressionDriveNode ndrv;
+	jcr6_TDirnDriveNode ndrv;
 	if (DirDrivers->first==NULL){
 		chat("FIRST DIR DRIVER NODE!");
 		ndrv=newDirDriverNode(); chat("= Allocated");
