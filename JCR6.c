@@ -128,6 +128,7 @@ void buf_readstring(bufread buffer, char * output){
 void buf_readstringcap(bufread buffer,char * output,int max){
 	int size=buf_readint(buffer);
 	memset(output,0,max);
+	//printf("\n\nReadStringCap {\n\tSize: %5d\n\tMax:  %5d\n }\n\n",size,max);
 	if (size>=max-1){
 		warn("String bigger than set maximum! Truncated for memory protection!");
 		buf_readfixed(buffer,output,max-1);
@@ -387,6 +388,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					do{
 						// TODO: https://github.com/Tricky1975/JCR6_C/issues#1
 						ftag=buf_read(buf);
+						chatvalue("= File config tag ",ftag);
 						switch(ftag){
 							case 255: break;
 							case   1:
@@ -401,7 +403,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 								break;
 							case   3:
 								buf_readstringcap(buf,fkey,sizeof(fkey));
-								fint=buf_read(buf);
+								fint=buf_readint(buf);
 								chatvalue(fkey,fint);
 								break;
 						}
