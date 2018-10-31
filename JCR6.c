@@ -175,6 +175,11 @@ bool recognize_jcr6(char * file){
 	mchat(2,"= Trying to recognize file: ",file);
 	FILE * bt = fopen(file,"rb");
 	if (bt==NULL) { chat("= Error opening file"); return false; }
+	if (streamsize(bt)<10) {
+		chat("= Streamsize is lower than 10. I don't believe this is a real JCR6 file.");
+		fclose(bt);
+		return false;
+	}
 	fgets(readheader,6,(FILE*)bt);
 	fclose(bt);
 	for (int i=0; i<5; i++){
