@@ -129,6 +129,7 @@ jcr6_TDir jcr6_Dir(char * myfile);
 void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);
 bool jcr6_Recognize(char * myfile);
+jcr6_TCompressDriver jcr6_GetCompressionDriver(char * id); // I doubt you'll ever need this outside the JCR6 library, but what the heck!
 
 // extern vars
 extern bool jcr6_autodel;

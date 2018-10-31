@@ -144,6 +144,16 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 	mchat(2,"Registered storage: ",id);
 }
 
+jcr6_TCompressDriver jcr6_GetCompressionDriver(char * id){
+	if (Drivers==NULL) { yell("JCR6 not properly initialized?"); return NULL; }
+	if (Drivers->first==NULL) { yell("JCR6 not properly initialized?"); return NULL; }
+	for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
+		if (strcmp(drv->id,id)==0) return drv->Driver;
+	}
+	yell("Unknown compression method!");
+	return NULL;
+}
+
 void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
 	jcr6_TDirDriveNode ndrv;
 	if (DirDrivers->first==NULL){
@@ -203,7 +213,8 @@ bool recognize_jcr6(char * file){
 	chat("= All cool!");
 	return true;
 }
-jcr6_TDir dir_jcr6(char * myfile){
+
+static jcr6_TDir dir_jcr6(char * myfile){
 	mchat(2,"= Reading: ",myfile);
 	FILE * bt = fopen(myfile,"rb");
 	if (bt==NULL) { chat("= Error opening file"); yell("Error opening file"); return NULL; }
@@ -225,8 +236,18 @@ jcr6_TDir dir_jcr6(char * myfile){
 	ret->fat_storage   = malloc(storage_length+1);
 	fread(ret->fat_storage,storage_length,1,bt);
 	ret->fat_storage[storage_length]=0;
+	// Get the FAT as a temporary buffer
+	char * fat_compressedbuffer = malloc(ret->fat_csize);
+	char * fat_buffer;
+	jcr6_TCompressDriver storagedriver = jcr6_GetCompressionDriver(ret->fat_storage);
+	storagedriver->expand(fat_compressedbuffer,ret->fat_csize,fat_buffer,ret->fat_size);
+	if (storagedriver->destroyoriginal) free(fat_compressedbuffer);
+
 	// close file
 	fclose(bt);
+
+	// release the buffer we no longer need
+	free(fat_buffer);
 
 	return ret;
 }
@@ -285,6 +306,7 @@ void jcr6_init(void){
 	Store->expand=&store_expand;
 	chat("= Registering");
 	jcr6_registercompressiondriver("Store",Store);
+	Store->destroyoriginal=false; // Must be done AFTER registering!
 	chat("Allocating memory for compression algorithm drivers");
 	DirDrivers = malloc(sizeof(struct tjcr6_TDirDriveMap));
 	DirDrivers->first=NULL;
