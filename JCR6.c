@@ -387,9 +387,11 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					unsigned char ftag=0;
 					jcr6_TEntry E = malloc(sizeof(struct tjcr6_TEntry));
 					jcr6_TEntryNode ENode = malloc(sizeof(struct tjcr6_TEntryNode));
+					ENode->next=NULL;
 					if (first) {
 						ret->Entries->first = ENode;
 						ENext=ENode;
+						ENode->prev=NULL; // VERRRY important.
 					} else {
 						ENext->next=ENode;
 						ENext->prev=ENext;
@@ -505,6 +507,17 @@ void jcr6_init(void){
 
 // Free JCR dir (and all data it contains in sub branches)
 void jcr6_free(jcr6_TDir j){
+	// dispose all the nodes (and don't forget the entries they contain)
+	jcr6_TEntryNode LENode;
+	for (jcr6_TEntryNode ENode=j->Entries->first;ENode!=NULL;ENode=ENode->next){ // Yeah, this is the closest you'll get to a "foreach" in C.
+		free(j->Entry);
+		if (j->prev!=NULL) free(j->prev);
+		LENode=j;
+	}
+	free(LENode); // despose the last entry
+	// dispose the map itself
+	free(j->Entries);
+	// dispose the object itself
 	free(j->fat_storage);
 	free(j); chat("= Freed JCR directory object");
 }
