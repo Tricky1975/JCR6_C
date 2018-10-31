@@ -206,10 +206,14 @@ jcr6_TDir dir_jcr6(char * myfile){
 	mchat(2,"= Reading: ",myfile);
 	FILE * bt = fopen(myfile,"rb");
 	if (bt==NULL) { chat("= Error opening file"); yell("Error opening file"); return NULL; }
+	chat("= Opening succseful!");
 	for(int i=0;i<5;i++) fgetc(bt); // No need to read the header again. It's already been done.
+	chat("= Header skipped");
 	// initiate directory object
+	chat("= Allocating memory for directory map");
 	jcr6_TDir ret = malloc(sizeof(struct tjcr6_TDir));
 	// fat offset
+	chat("= Reading offset");
 	ret->fat_offset = stream_readint(bt);
 	// close file
 	fclose(bt);

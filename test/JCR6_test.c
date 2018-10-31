@@ -30,9 +30,11 @@ int main(void){
 	jcr6_init();
 	bool rb = jcr6_Recognize("test.jcr");
 	printf("\n\nRecognise success %d => %s",rb,jcr6_recas);
+	// /*
 	jcr6_TDir j = jcr6_Dir("test.jcr");
 	printf("Directory offset %d",j->fat_offset);
 	printf("\n");
 	jcr6_free(j);
+	// */
 	jcr6_dispose();
 }
