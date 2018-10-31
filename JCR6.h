@@ -70,6 +70,18 @@ typedef struct tjcr6_TDirDriver {
 typedef struct tjcr6_TCompressDriver {
 	void (*compress)(char * originalbuf,int originalsize,char * compressedbuf,int * compressedsize);
 	void (*expand)(char * originalbuf,int originalsize,char * expandedbuf,int expandedsize);
+	bool destroyoriginal;
+	   /*
+	    * NOTE:
+	    * The registering function will ALWAYS define true in this, which should always be the value used
+	    * (unless you love memory leaks), but in the exceptional cases the original buffer should remain in the
+	    * memory (like with the Store method where the original and target will just be a pointer forwarding in
+	    * order to save time) this should be set to false AFTER registering the new driver.
+	    *
+	    * This may be an odd approach, but since C has no automated garbage collector, all read data from before
+	    * or after the (de)compression must be disposed/freed manually and in the case of Store that could lead
+	    * to very funny outcomes if I didn't take this approach.
+	    */
 } * jcr6_TCompressDriver;
 
 
