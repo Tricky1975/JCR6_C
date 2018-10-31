@@ -302,8 +302,12 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	// close file
 	fclose(bt);
 
-	// release the buffer we no longer need
-	free(fat_buffer);
+	// Open the uncompressed fat buffer so we can read that
+	bufread buf = buf_start(fat_buffer,ret->fat_size);
+
+
+	// close release the buffer we no longer need
+	buf_close(buf);
 
 	return ret;
 }
