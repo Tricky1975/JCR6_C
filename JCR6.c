@@ -60,6 +60,11 @@ union eint{
 	int myint;
 	char mychar[4];
 };
+union elong{
+	long myint;
+	char mychar[8];
+};
+
 int stream_readint(FILE *stream){
 	//static bool LittleEndian=IsLittleEndian();
 	union eint value[2];
@@ -68,6 +73,57 @@ int stream_readint(FILE *stream){
 		value[false].mychar[3-i]=value[true].mychar[i];
 	}
 	return value[IsLittleEndian()].myint;
+}
+
+// buffer read functions
+bufread buf_start(char * buffer,int size){
+	bufread ret = malloc(sizeof(struct tbufread));
+	ret->size=size;
+	ret->position=0;
+	ret->littleendian=true;
+	ret->buffer=buffer;
+	return ret;
+}
+
+bufread buf_start_bigendian(char *buffer,int size){
+	bufread ret = buf_start(buffer,size);
+	ret->littleendian=false;
+	return ret;
+}
+
+char buf_read(bufread buffer){
+	if (buffer->position>=buffer->size) { yell("End of buffer reached!"); return 26; }
+	char ret=buffer->buffer[buffer->position];
+	buffer->position++;
+	return ret;
+}
+
+int buf_readint(bufread buffer){
+	union eint ret[2];
+	for(int i=0;i<4;i++){
+		ret[true ].mychar[  i]=buf_read(buffer);
+		ret[false].mychar[3-i]=ret[true].mychar[i];
+	}
+	return ret[IsLittleEndian()==buffer->littleendian].myint;
+}
+long buf_readlong(bufread buffer){
+	union elong ret[2];
+	for(int i=0;i<8;i++){
+		ret[true ].mychar[  i]=buf_read(buffer);
+		ret[false].mychar[7-i]=ret[true].mychar[i];
+	}
+	return ret[IsLittleEndian()==buffer->littleendian].myint;
+}
+void buf_readfixed(bufread buffer, char * output, int size){
+	for(int i=0;i<size;i++) output[i]=buf_read(buffer);
+}
+void buf_readstring(bufread buffer, char * output){
+	int size=buf_readint(buffer);
+	buf_readfixed(buffer,output,size);
+}
+void buf_close(bufread buffer){ // If you do not want the buffer inside to be destroyed, then just free the "bufread" variable itself.
+	free(buffer->buffer);
+	free(buffer);
 }
 
 

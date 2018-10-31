@@ -117,6 +117,14 @@ typedef struct tjcr6_TCompressionDriveMap{
 
 
 
+// buffer read type
+typedef struct tbufread{
+	int size;
+	int position;
+	bool littleendian; // true when LittleEndian false when BigEndian
+	char * buffer;
+} * bufread;
+
 
 // macro
 #define jcr_newCompressDriver malloc(sizeof(jcr6_TCompressDriver));
@@ -130,6 +138,17 @@ void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);
 bool jcr6_Recognize(char * myfile);
 jcr6_TCompressDriver jcr6_GetCompressionDriver(char * id); // I doubt you'll ever need this outside the JCR6 library, but what the heck!
+
+// buffer read functions
+bufread buf_start(char * buffer, int size);
+bufread buf_start_bigendian(char *buffer,int size);
+char buf_read(bufread buffer);
+int buf_readint(bufread buffer);
+long buf_readlong(bufread buffer);
+void buf_readfixed(bufread buffer, char * output, int size);
+void buf_readstring(bufread buffer, char * output);
+void buf_readstringa(bufread buffer, char * output);
+void buf_close(bufread buffer); // If you do not want the buffer inside to be destroyed, then just free the "bufread" variable itself.
 
 // extern vars
 extern bool jcr6_autodel;
