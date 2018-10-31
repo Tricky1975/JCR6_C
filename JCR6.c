@@ -282,7 +282,7 @@ void jcr6_init(void){
 
 // Free JCR dir (and all data it contains in sub branches)
 void jcr6_free(jcr6_TDir j){
-	free(j);
+	free(j); chat("= Freed JCR directory object");
 }
 
 void jcr6_dispose(void){
