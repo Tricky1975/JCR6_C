@@ -42,14 +42,14 @@ typedef struct tjcr6_TEntry {
 } * jcr6_TEntry;
 
 typedef struct tjcr6_TEntryNode{
-	char * id;
-	jcr6_TEntry * entry;
+	char id[JCR6_MAX_CFGSTRING];
+	jcr6_TEntry entry;
 	struct tjcr6_TEntryNode * next;
 	struct tjcr6_TEntryNode * prev;
 } * jcr6_TEntryNode;
 
 typedef struct{
-	jcr6_TEntryNode * first;
+	jcr6_TEntryNode first;
 
 	} jcr6_TEntryMap;
 

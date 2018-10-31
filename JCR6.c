@@ -510,9 +510,9 @@ void jcr6_free(jcr6_TDir j){
 	// dispose all the nodes (and don't forget the entries they contain)
 	jcr6_TEntryNode LENode;
 	for (jcr6_TEntryNode ENode=j->Entries->first;ENode!=NULL;ENode=ENode->next){ // Yeah, this is the closest you'll get to a "foreach" in C.
-		free(j->Entry);
-		if (j->prev!=NULL) free(j->prev);
-		LENode=j;
+		free(ENode->entry);
+		if (ENode->prev!=NULL) free(ENode->prev);
+		LENode=ENode;
 	}
 	free(LENode); // despose the last entry
 	// dispose the map itself
