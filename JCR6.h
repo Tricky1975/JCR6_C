@@ -1,7 +1,7 @@
 // Lic:
 //   JCR6.h
 //   JCR6 for C
-//   version: 18.10.30
+//   version: 18.10.31
 //   Copyright (C) 2018 Jeroen P. Broks
 //   This software is provided 'as-is', without any express or implied
 //   warranty.  In no event will the authors be held liable for any damages
@@ -51,8 +51,9 @@ typedef struct{
 
 	} jcr6_TEntryMap;
 
-typedef struct {
+typedef struct tjcr6_TDir {
 	jcr6_TEntryMap * Entries;
+	int fat_offset; // Only put in for use by the JCR6 format driver, but I guess WAD can also benefit from this.
 } * jcr6_TDir;
 
 

@@ -190,6 +190,11 @@ bool recognize_jcr6(char * file){
 	return true;
 }
 jcr6_TDir dir_jcr6(char * myfile){
+	mchat(2,"= Reading: ",myfile);
+	FILE * bt = fopen(file,"rb");
+	if (bt==NULL) { chat("= Error opening file"); return false; }
+	for(int i=0;i<5;i++); fgetc(bt); // No need to read the header again. It's already been done.
+
 	return NULL;
 }
 
