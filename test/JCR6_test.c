@@ -29,10 +29,11 @@ int main(void){
 	char  rc[10];
 	jcr6_init();
 	bool rb = jcr6_Recognize("test.jcr");
-	printf("\n\nRecognise success %d => %s",rb,jcr6_recas);
+	printf("\n\nRecognise success %d => %s\n",rb,jcr6_recas);
 	// /*
+	printf("Let's read the file and see what will happen next!\n");
 	jcr6_TDir j = jcr6_Dir("test.jcr");
-	printf("Directory offset %d",j->fat_offset);
+	printf("Directory offset %d\n",j->fat_offset);
 	printf("\n");
 	jcr6_free(j);
 	// */

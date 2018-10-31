@@ -257,7 +257,9 @@ bool jcr6_Recognize(char * myfile){
 }
 
 jcr6_TDir jcr6_Dir(char * myfile){
-	return NULL;
+	if (!jcr6_Recognize(myfile)) { yell("File not recognized for reading in JCR!"); return NULL; }
+	mchat(4,"File ",myfile," has been recognized as ",jcr6_recas);
+	return jcr6_recdrv->dir(myfile);
 }
 
 // Init JCR6 and make sure the default drivers are all in!
