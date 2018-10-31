@@ -23,18 +23,20 @@
 
 #include <stdbool.h>
 
-
+#define JCR6_MAX_CFGSTRING 255
 
 
 // Entry mapping
 typedef struct{
-	char * entry;
-	char * mainfile;
+	char entry[JCR6_MAX_CFGSTRING];
+	char mainfile[JCR6_MAX_CFGSTRING];
 	int size;
 	int compressedsize;
-	char * storagemethod;
-	char * author;
-	char * notes;
+	int timestamp;
+	int unixpermissions;
+	char storagemethod[JCR6_MAX_CFGSTRING];
+	char author[JCR6_MAX_CFGSTRING];
+	char notes[JCR6_MAX_CFGSTRING];
 	// TODO: Config map could be added in future versions, as it could deal with the stuff outside the default JCR6 scope.
 
 } jcr6_TEntry;

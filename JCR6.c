@@ -37,6 +37,7 @@ jcr6_TDirDriver jcr6_recdrv;
 
 // internal header (for private stuff only)
 static void yell(char *errormessage);
+static void warn(char *warning);
 static void chat(char *dbgchat);
 static void mchat(int num,...);
 static void chatvalue(char *field,int value);
@@ -123,6 +124,17 @@ void buf_readfixed(bufread buffer, char * output, int size){
 void buf_readstring(bufread buffer, char * output){
 	int size=buf_readint(buffer);
 	buf_readfixed(buffer,output,size);
+}
+void buf_readstringcap(bufread buffer,char * output,int max){
+	int size=buf_readint(buffer);
+	memset(output,0,max);
+	if (size>=max-1){
+		warn("String bigger than set maximum! Truncated for memory protection!");
+		buf_readfixed(buffer,output,max-1);
+		buffer->position+=(size-(max-1));
+	} else {
+		buf_readfixed(buffer,output,size);
+	}
 }
 void buf_close(bufread buffer){ // If you do not want the buffer inside to be destroyed, then just free the "bufread" variable itself.
 	free(buffer->buffer);
@@ -274,6 +286,10 @@ static void yell(char *errormessage){
 	}
 }
 
+static void warn(char *warning){
+	if (jcr6_yell) printf("WARNING: %s!\n",warning);
+}
+
 // Recognize a standard JCR6 file
 bool recognize_jcr6(char * file){
 	char header[5] = {'J','C','R','6',26};
@@ -362,9 +378,39 @@ static jcr6_TDir dir_jcr6(char * myfile){
 				mchat(2,"= Instruction: ",stag);
 				if (strcmp(stag,"FILE")==0){
 					chat("FILE tag!");
+					char fkey[JCR6_MAX_CFGSTRING];
+					char fstring[JCR6_MAX_CFGSTRING];
+					char fbl;
+					int  fint;
+					unsigned char ftag=0;
 					theend=true; // DEBUG ONLY!!!
+					do{
+						// TODO: https://github.com/Tricky1975/JCR6_C/issues#1
+						ftag=buf_read(buf);
+						switch(ftag){
+							case 255: break;
+							case   1:
+								buf_readstringcap(buf,fkey,sizeof(fkey));
+								buf_readstringcap(buf,fstring,sizeof(fstring));
+								mchat(3,fkey,"=",fstring);
+								break;
+							case   2:
+								buf_readstringcap(buf,fkey,sizeof(fkey));
+								fbl=buf_read(buf);
+								chatvalue(fkey,fbl);
+								break;
+							case   3:
+								buf_readstringcap(buf,fkey,sizeof(fkey));
+								fint=buf_read(buf);
+								chatvalue(fkey,fint);
+								break;
+						}
+					} while (ftag!=0xff);
 				}
-
+				break;
+			default:
+				yell("Unknown instruction tag!");
+				theend=true;
 		}
 	} while(theend==false);
 
