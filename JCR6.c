@@ -216,6 +216,11 @@ jcr6_TDir dir_jcr6(char * myfile){
 	// fat offset
 	chat("= Reading offset");
 	ret->fat_offset = stream_readint(bt);
+	// TODO: Reading header config
+	// Go to the offset
+	fseek(bt,ret->fat_offset,SEEK_SET);
+	ret->fat_size  = stream_readint(bt);
+	ret->fat_csize = stream_readint(bt);
 	// close file
 	fclose(bt);
 

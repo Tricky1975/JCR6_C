@@ -34,6 +34,8 @@ int main(void){
 	printf("Let's read the file and see what will happen next!\n");
 	jcr6_TDir j = jcr6_Dir("test.jcr");
 	printf("Directory offset %d\n",j->fat_offset);
+	printf("Directory size   %d\n",j->fat_size);
+	printf("Directory csize  %d\n",j->fat_csize);
 	printf("\n");
 	jcr6_free(j);
 	// */

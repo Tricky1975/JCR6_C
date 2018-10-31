@@ -53,7 +53,10 @@ typedef struct{
 
 typedef struct tjcr6_TDir {
 	jcr6_TEntryMap * Entries;
-	int fat_offset; // Only put in for use by the JCR6 format driver, but I guess WAD can also benefit from this.
+	// Only put in for use by the JCR6 format driver, but I guess WAD can also benefit from this.
+	int fat_offset;
+	int fat_size;
+	int fat_csize;
 } * jcr6_TDir;
 
 
