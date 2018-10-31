@@ -105,7 +105,9 @@ typedef struct tjcr6_TDirDriveMap{
 
 // Compression map
 typedef struct tjcr6_TCompressionDriveNode{
+	char ignoreme; // I don't know why, but this ugly declaration prevents the id from being emptied...
 	char id[10];
+	int count;
 	jcr6_TCompressDriver Driver;
 	struct tjcr6_TCompressionDriveNode * next;
 	struct tjcr6_TCompressionDriveNode * prev;

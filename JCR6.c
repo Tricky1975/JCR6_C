@@ -39,6 +39,7 @@ jcr6_TDirDriver jcr6_recdrv;
 static void yell(char *errormessage);
 static void chat(char *dbgchat);
 static void mchat(int num,...);
+static void chatvalue(char *field,int value);
 
 // JCR6 is a LittleEndian based file system, and I must make sure that on PPC too everything is read in LittleEndian, even when the CPU will calculate in BigEndian.
 bool IsLittleEndian () {
@@ -93,7 +94,9 @@ bufread buf_start_bigendian(char *buffer,int size){
 
 char buf_read(bufread buffer){
 	if (buffer->position>=buffer->size) { yell("End of buffer reached!"); return 26; }
+	//chatvalue("Readbyte.position",buffer->position);
 	char ret=buffer->buffer[buffer->position];
+	//chat("Done");
 	buffer->position++;
 	return ret;
 }
@@ -149,6 +152,11 @@ static void mchat(int num,...){
 	}
 }
 
+static void chatvalue(char * field,int value){
+	if (jcr6_chat){
+		printf("DEBUG: %s = %5d\n",field,value);
+	}
+}
 
 // Driver map
 static jcr6_TCompressionDriveMap Drivers = NULL;
@@ -165,30 +173,42 @@ static void store_expand(char * originalbuf,int originalsize,char * expandedbuf,
 }
 
 jcr6_TCompressionDriveNode newDriverNode(void){
-	return malloc(sizeof(struct tjcr6_TCompressionDriveNode));
+	jcr6_TCompressionDriveNode ret = malloc(sizeof(struct tjcr6_TCompressionDriveNode));
+	ret->next=NULL;
+	ret->prev=NULL;
+	ret->Driver=NULL;
+	strcpy(ret->id,"?");
+	chat("= New compression node created");
+	return ret;
 }
 jcr6_TDirDriveNode newDirDriveNode(void){
 	return malloc(sizeof(struct tjcr6_TDirDriveNode));
 }
 
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
+	static int count=0; count++;
 	jcr6_TCompressionDriveNode ndrv;
 	d->destroyoriginal=true;
 	if (Drivers->first==NULL){
-		chat("FIRST DRIVER NODE!");
+		chat("FIRST COMPRESS DRIVER NODE!");
 		ndrv=newDriverNode(); chat("= Allocated");
 		ndrv->Driver=d; chat("= Assigned");
-		strcpy(ndrv->id,id); chat("= ID");
+		//printf("%ld\n",sizeof(ndrv->id));
+		memset(ndrv->id,0,sizeof(ndrv->id));
+		strcpy(ndrv->id,id); mchat(4,"= ID",ndrv->id," <= ",id);
 		Drivers->first=ndrv; chat("= In first node");
 		ndrv->next=NULL; chat("= NULLED next");
 		ndrv->prev=NULL; chat("= NULLED prev");
+		ndrv->count=count;
 		chat("First node creation done!");
+		printf("%s",ndrv->id);
 	} else {
-		chat("Checking driver nodes");
+		chat("Checking compression driver nodes");
 		for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
 			if (strcmp(drv->id,id)==0) { yell("Duplicate string driver!"); return; }
 			ndrv=drv;
 		}
+		ndrv->next->count=count;
 		ndrv->next=newDriverNode();
 		strcpy(ndrv->next->id,id);
 		ndrv->next->Driver=d;
@@ -201,10 +221,16 @@ void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d){
 }
 
 jcr6_TCompressDriver jcr6_GetCompressionDriver(char * id){
+	mchat(2,"= Looking up storage driver: ",id);
 	if (Drivers==NULL) { yell("JCR6 not properly initialized?"); return NULL; }
 	if (Drivers->first==NULL) { yell("JCR6 not properly initialized?"); return NULL; }
 	for(jcr6_TCompressionDriveNode drv=Drivers->first; drv!=NULL; drv=drv->next){
-		if (strcmp(drv->id,id)==0) return drv->Driver;
+		if (jcr6_chat) printf("DEBUG: = Count: %d\n",drv->count);
+		mchat(2,"= Found: ",drv->id);
+		//* debug */ for (int iii=0;iii<10;iii++) printf("%d > %3d\n",iii,drv->id[iii]);
+		if (strcmp(drv->id,id)==0) { chat("= We got what we wanted, let's go back home!"); return drv->Driver; }
+		chat("= Nope! I don't want ya! Is there more?");
+		if (drv->next!=NULL) {chat("= Onto the next!"); } else {chat("= Last one! I smell an error coming up!"); break;}
 	}
 	yell("Unknown compression method!");
 	return NULL;
@@ -240,7 +266,7 @@ void jcr6_registerdirdriver(char * id, jcr6_TDirDriver d){
 }
 
 static void yell(char *errormessage){
-	strcpy(jcr6_error,errormessage);
+	jcr6_error=errormessage;
 	if (jcr6_yell) printf("ERROR: %s!\n",errormessage);
 	if (jcr6_crash) {
 		jcr6_dispose();
@@ -286,42 +312,61 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	// TODO: Reading header config
 	// Go to the offset
 	fseek(bt,ret->fat_offset,SEEK_SET);
+	chat("= Grabbing size data!");
 	ret->fat_size      = stream_readint(bt);
 	ret->fat_csize     = stream_readint(bt);
+	chat("= Reading storage data");
 	int storage_length = stream_readint(bt);
 	ret->fat_storage   = malloc(storage_length+1);
 	fread(ret->fat_storage,storage_length,1,bt);
 	ret->fat_storage[storage_length]=0;
 	// Get the FAT as a temporary buffer
+	mchat(2,"= Working out with storage method: ",ret->fat_storage);
 	char * fat_compressedbuffer = malloc(ret->fat_csize);
 	char * fat_buffer;
+	fread(fat_compressedbuffer,ret->fat_csize,1,bt);
 	jcr6_TCompressDriver storagedriver = jcr6_GetCompressionDriver(ret->fat_storage);
-	storagedriver->expand(fat_compressedbuffer,ret->fat_csize,fat_buffer,ret->fat_size);
-	if (storagedriver->destroyoriginal) free(fat_compressedbuffer);
+	if (storagedriver->destroyoriginal) {
+		storagedriver->expand(fat_compressedbuffer,ret->fat_csize,fat_buffer,ret->fat_size);
+		free(fat_compressedbuffer); chat("= Destroying packed data as we no longer need that");
+	} else {
+		chat("= Keeping packed data. Apparently it's still required!");
+		fat_buffer=fat_compressedbuffer;
+	}
 
 	// close file
+	chat("= Closing file, as we can now move on to the memory!");
 	fclose(bt);
 
 	// Open the uncompressed fat buffer so we can read that
+	chat("= Start reading from buffer!");
 	bufread buf = buf_start(fat_buffer,ret->fat_size);
 	bool first = true;
 	bool theend = false;
 	do{
+		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
-		char tag = buf_read(buf);
+		chat("= Reading byte tag");
+		unsigned char tag = buf_read(buf);
+		chatvalue("= Byte Tag",tag);
 		char stag[10]; // It's not unthinkable that future versions require this number to be higher...
 		switch(tag){
 			case 0x0f:
+				chat("End of FAT!");
 				theend=true;
 				break;
 			case 0x01:
+				chat("= Instruction tag found!");
+				memset(stag,0,sizeof(stag));
 				buf_readstring(buf,stag);
+				mchat(2,"= Instruction: ",stag);
 				if (strcmp(stag,"FILE")==0){
-
+					chat("FILE tag!");
+					theend=true; // DEBUG ONLY!!!
 				}
 
 		}
-	} while(!theend);
+	} while(theend==false);
 
 
 
