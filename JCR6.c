@@ -304,6 +304,27 @@ static jcr6_TDir dir_jcr6(char * myfile){
 
 	// Open the uncompressed fat buffer so we can read that
 	bufread buf = buf_start(fat_buffer,ret->fat_size);
+	bool first = true;
+	bool theend = false;
+	do{
+		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
+		char tag = buf_read(buf);
+		char stag[10]; // It's not unthinkable that future versions require this number to be higher...
+		switch(tag){
+			case 0x0f:
+				theend=true;
+				break;
+			case 0x01:
+				buf_readstring(buf,stag);
+				if (strcmp(stag,"FILE")==0){
+
+				}
+
+		}
+	} while(!theend);
+
+
+
 
 
 	// close release the buffer we no longer need
