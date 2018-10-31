@@ -1,7 +1,7 @@
 // Lic:
 //   JCR6.c
 //   JCR6 for C
-//   version: 18.10.30
+//   version: 18.10.31
 //   Copyright (C) 2018 Jeroen P. Broks
 //   This software is provided 'as-is', without any express or implied
 //   warranty.  In no event will the authors be held liable for any damages
@@ -46,6 +46,18 @@ bool IsLittleEndian () {
     return (int)*((unsigned char *)&i)==1;
 }
 // Thanks to Robert Allan Hennigan Leahy for posting this on StackOverflow. ;)
+
+
+// A few core reading functions
+long int streamsize(FILE *stream){
+	long int old = ftell(stream);
+	fseek(stream, 0L, SEEK_END);
+	long int sz = ftell(stream);
+	fseek(stream, old, SEEK_SET);
+	return sz;
+}
+
+
 
 // debug chat
 static void chat(char *dbgchat){
@@ -162,6 +174,7 @@ bool recognize_jcr6(char * file){
 	char readheader[6];
 	mchat(2,"= Trying to recognize file: ",file);
 	FILE * bt = fopen(file,"rb");
+	if (bt==NULL) { chat("= Error opening file"); return false; }
 	fgets(readheader,6,(FILE*)bt);
 	fclose(bt);
 	for (int i=0; i<5; i++){
