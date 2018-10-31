@@ -219,8 +219,12 @@ jcr6_TDir dir_jcr6(char * myfile){
 	// TODO: Reading header config
 	// Go to the offset
 	fseek(bt,ret->fat_offset,SEEK_SET);
-	ret->fat_size  = stream_readint(bt);
-	ret->fat_csize = stream_readint(bt);
+	ret->fat_size      = stream_readint(bt);
+	ret->fat_csize     = stream_readint(bt);
+	int storage_length = stream_readint(bt);
+	ret->fat_storage   = malloc(storage_length+1);
+	fread(ret->fat_storage,storage_length,1,bt);
+	ret->fat_storage[storage_length]=0;
 	// close file
 	fclose(bt);
 
@@ -294,6 +298,7 @@ void jcr6_init(void){
 
 // Free JCR dir (and all data it contains in sub branches)
 void jcr6_free(jcr6_TDir j){
+	free(j->fat_storage);
 	free(j); chat("= Freed JCR directory object");
 }
 

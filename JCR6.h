@@ -57,6 +57,7 @@ typedef struct tjcr6_TDir {
 	int fat_offset;
 	int fat_size;
 	int fat_csize;
+	char * fat_storage;
 } * jcr6_TDir;
 
 
