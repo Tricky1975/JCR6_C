@@ -27,7 +27,7 @@
 
 
 // Entry mapping
-typedef struct{
+typedef struct tjcr6_TEntry {
 	char entry[JCR6_MAX_CFGSTRING];
 	char mainfile[JCR6_MAX_CFGSTRING];
 	int size;
@@ -39,14 +39,14 @@ typedef struct{
 	char notes[JCR6_MAX_CFGSTRING];
 	// TODO: Config map could be added in future versions, as it could deal with the stuff outside the default JCR6 scope.
 
-} jcr6_TEntry;
+} * jcr6_TEntry;
 
 typedef struct tjcr6_TEntryNode{
 	char * id;
 	jcr6_TEntry * entry;
 	struct tjcr6_TEntryNode * next;
 	struct tjcr6_TEntryNode * prev;
-} jcr6_TEntryNode;
+} * jcr6_TEntryNode;
 
 typedef struct{
 	jcr6_TEntryNode * first;
