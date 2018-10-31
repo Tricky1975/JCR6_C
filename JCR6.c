@@ -384,7 +384,9 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					char fbl;
 					int  fint;
 					unsigned char ftag=0;
-					theend=true; // DEBUG ONLY!!!
+					jcr6_TEntry E = malloc(sizeof(struct tjcr_TEntry));
+					jcr6_TEntryNode ENode = malloc(sizeof(struct jcr6_TEntryNode))
+					// theend=true; // DEBUG ONLY!!!
 					do{
 						// TODO: https://github.com/Tricky1975/JCR6_C/issues#1
 						ftag=buf_read(buf);
