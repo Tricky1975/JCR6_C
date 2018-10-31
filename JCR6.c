@@ -360,6 +360,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	bufread buf = buf_start(fat_buffer,ret->fat_size);
 	bool first = true;
 	bool theend = false;
+	jcr6_TEntryNode ENext;
 	do{
 		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
@@ -386,6 +387,14 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					unsigned char ftag=0;
 					jcr6_TEntry E = malloc(sizeof(struct tjcr6_TEntry));
 					jcr6_TEntryNode ENode = malloc(sizeof(struct tjcr6_TEntryNode));
+					if (first) {
+						ret->Entries->first = ENode;
+						ENext=ENode;
+					} else {
+						ENext->next=ENode;
+						ENext->prev=ENext;
+						ENext=ENode;
+					}
 					// theend=true; // DEBUG ONLY!!!
 					do{
 						// TODO: https://github.com/Tricky1975/JCR6_C/issues#1
