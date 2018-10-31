@@ -61,13 +61,13 @@ union eint{
 	char mychar[4];
 };
 int stream_readint(FILE *stream){
-	static bool LittleEndian=IsLittleEndian();
+	//static bool LittleEndian=IsLittleEndian();
 	union eint value[2];
 	for (int i=0;i<4;i++) {
 		value[true] .mychar[  i]=fgetc(stream);
 		value[false].mychar[3-i]=value[true].mychar[i];
 	}
-	return value[LittleEndian].myint;
+	return value[IsLittleEndian()].myint;
 }
 
 
@@ -204,9 +204,9 @@ bool recognize_jcr6(char * file){
 }
 jcr6_TDir dir_jcr6(char * myfile){
 	mchat(2,"= Reading: ",myfile);
-	FILE * bt = fopen(file,"rb");
+	FILE * bt = fopen(myfile,"rb");
 	if (bt==NULL) { chat("= Error opening file"); yell("Error opening file"); return NULL; }
-	for(int i=0;i<5;i++); fgetc(bt); // No need to read the header again. It's already been done.
+	for(int i=0;i<5;i++) fgetc(bt); // No need to read the header again. It's already been done.
 	// initiate directory object
 	jcr6_TDir ret = malloc(sizeof(tjcr6_TDir));
 	// fat offset
