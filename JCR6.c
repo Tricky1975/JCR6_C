@@ -207,7 +207,12 @@ jcr6_TDir dir_jcr6(char * myfile){
 	FILE * bt = fopen(file,"rb");
 	if (bt==NULL) { chat("= Error opening file"); yell("Error opening file"); return NULL; }
 	for(int i=0;i<5;i++); fgetc(bt); // No need to read the header again. It's already been done.
+	// initiate directory object
 	jcr6_TDir ret = malloc(sizeof(tjcr6_TDir));
+	// fat offset
+	ret.fat_offset = stream_readint(bt);
+	// close file
+	fclose(bt);
 
 	return ret;
 }
