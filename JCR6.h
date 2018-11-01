@@ -38,6 +38,7 @@ typedef struct tjcr6_TEntry {
 	char author[JCR6_MAX_CFGSTRING];
 	char notes[JCR6_MAX_CFGSTRING];
 	// TODO: Config map could be added in future versions, as it could deal with the stuff outside the default JCR6 scope.
+	// jcr_configmap cfg;  // Just put here for later usage!
 
 } * jcr6_TEntry;
 
