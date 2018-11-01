@@ -34,6 +34,7 @@ typedef struct tjcr6_TEntry {
 	int compressedsize;
 	int timestamp;
 	int unixpermissions;
+	int offset;
 	char storagemethod[JCR6_MAX_CFGSTRING];
 	char author[JCR6_MAX_CFGSTRING];
 	char notes[JCR6_MAX_CFGSTRING];
