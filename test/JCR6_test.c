@@ -23,7 +23,7 @@
 
 
 int main(void){
-	jcr6_chat=true; // This is a debugging session after all!
+	//jcr6_chat=true; // This is a debugging session after all!
 	printf(" node = %ld\n",sizeof( jcr6_TCompressionDriveNode));
 	printf("*node = %ld\n",sizeof(struct tjcr6_TCompressionDriveNode));
 	char rc[10];
