@@ -371,7 +371,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 		chatvalue("= Byte Tag",tag);
 		char stag[10]; // It's not unthinkable that future versions require this number to be higher...
 		switch(tag){
-			case 0x0f:
+			case 0xff:
 				chat("End of FAT!");
 				theend=true;
 				break;
@@ -396,6 +396,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 						ret->Entries->first = ENode;
 						ENext=ENode;
 						ENode->prev=NULL; // VERRRY important.
+						first=false;
 					} else {
 						ENext->next=ENode;
 						ENext->prev=ENext;
@@ -453,6 +454,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 				}
 				break;
 			default:
+				if (jcr6_yell) printf("EEKS! %3d <--- what's this?\n",tag);
 				yell("Unknown instruction tag!");
 				theend=true;
 		}
