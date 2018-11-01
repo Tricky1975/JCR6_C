@@ -38,6 +38,10 @@ int main(void){
 	printf("Directory csize   %d\n",j->fat_csize);
 	printf("Directory storage '%s'\n",j->fat_storage);
 	printf("\n");
+	//jcr6_TDirEntryNode en;
+	foreach_entries(en,j){
+		printf("id: %s\t%s\tsize:%5d/%5d\tstorage: %s\n",en->id,en->entry->entry,en->entry->size,en->entry->compressedsize,en->entry->storagemethod);
+	}
 	jcr6_free(j);
 	// */
 	jcr6_dispose();
