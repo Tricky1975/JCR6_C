@@ -15,7 +15,7 @@
 // with basically comes down to the same lack of
 // restriction the public domain offers. (YAY!)
 // *********************************************************** 
-// Version 18.10.30
+// Version 18.10.31
 // EndLic
 
 #include <stdio.h>

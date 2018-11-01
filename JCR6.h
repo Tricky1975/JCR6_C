@@ -49,7 +49,7 @@ typedef struct tjcr6_TEntryNode{
 	struct tjcr6_TEntryNode * prev;
 } * jcr6_TEntryNode;
 
-typedef struct{
+typedef struct tjcr6_TEntryMap{
 	jcr6_TEntryNode first;
 
 	} jcr6_TEntryMap;

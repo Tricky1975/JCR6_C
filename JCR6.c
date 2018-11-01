@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <ctype.h>
 #include "JCR6.h"
 
 bool jcr6_autodel = true;
@@ -361,6 +362,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	bool first = true;
 	bool theend = false;
 	jcr6_TEntryNode ENext;
+	ret->Entries = malloc(sizeof(struct tjcr6_TEntryMap));
 	do{
 		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
@@ -388,7 +390,9 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					jcr6_TEntry E = malloc(sizeof(struct tjcr6_TEntry));
 					jcr6_TEntryNode ENode = malloc(sizeof(struct tjcr6_TEntryNode));
 					ENode->next=NULL;
+					ENode->entry=E;
 					if (first) {
+						chat("= First dir map node");
 						ret->Entries->first = ENode;
 						ENext=ENode;
 						ENode->prev=NULL; // VERRRY important.
@@ -408,6 +412,22 @@ static jcr6_TDir dir_jcr6(char * myfile){
 								buf_readstringcap(buf,fkey,sizeof(fkey));
 								buf_readstringcap(buf,fstring,sizeof(fstring));
 								mchat(3,fkey,"=",fstring);
+								// Since C does NOT support strings normally (like higher levels languages do)
+								// naturally I cannot use "switch", so I gotta do it the old fashioned "if" style
+								// I'm afraid.
+								if (strcmp(fkey,"__Entry")==0) {
+									for(int i=0;i<JCR6_MAX_CFGSTRING && fstring[i];i++){
+										ENode->id[i]=toupper(fstring[i]);
+									} mchat(2,"= Current entry node identified as ",ENode->id);
+									strcpy(E->entry,fstring);
+								} else if (strcmp(fkey,"__Storage")==0) {
+									strcpy(E->storagemethod,fstring);
+								} else if (strcmp(fkey,"__Author")==0) {
+									strcpy(E->author,fstring);
+								} else if (strcmp(fkey,"__Notes")==0) {
+									strcpy(E->notes,fstring);
+									// TODO: Now there's a cap of 255 of a string. I doubt there'll be a lot of files exceeding that, but as I doubt many Notes won't be exceeding it, I think a char pointer is in order.
+								}
 								break;
 							case   2:
 								buf_readstringcap(buf,fkey,sizeof(fkey));
