@@ -438,6 +438,15 @@ static jcr6_TDir dir_jcr6(char * myfile){
 								buf_readstringcap(buf,fkey,sizeof(fkey));
 								fint=buf_readint(buf);
 								chatvalue(fkey,fint);
+								if (strcmp(fkey,"__Size")==0){
+									E->size=fint;
+								} else if (strcmp(fkey,"__CSize")==0){
+									E->compressedsize=fint;
+								} else if (strcmp(fkey,"__TimeStamp")==0){
+									E->timestamp=fint;
+								} else if (strcmp(fkey,"__Offset")==0) {
+									E->offset=fint;
+								}
 								break;
 						}
 					} while (ftag!=0xff);
