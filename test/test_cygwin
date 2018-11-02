@@ -1,0 +1,4 @@
+#!/bin/sh
+gcc *.c ../*.c -o test_JCR_CYGWIN
+#./test_JCR_CYGWIN
+
