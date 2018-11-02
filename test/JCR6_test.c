@@ -3,9 +3,9 @@
 // JCR6_test.c
 // This particular file has been released in the public domain
 // and is therefore free of any restriction. You are allowed
-// to credit me as the original author, but this is not 
+// to credit me as the original author, but this is not
 // required.
-// This file was setup/modified in: 
+// This file was setup/modified in:
 // 2018
 // If the law of your country does not support the concept
 // of a product being released in the public domain, while
@@ -14,7 +14,7 @@
 // "(c) Jeroen Broks - licensed under the CC0 License",
 // with basically comes down to the same lack of
 // restriction the public domain offers. (YAY!)
-// *********************************************************** 
+// ***********************************************************
 // Version 18.10.31
 // EndLic
 
@@ -40,7 +40,7 @@ int main(void){
 	printf("\n");
 	//jcr6_TDirEntryNode en;
 	foreach_entries(en,j){
-		printf("id: %s\t%s\tsize:%5d/%5d\tstorage: %s\n",en->id,en->entry->entry,en->entry->size,en->entry->compressedsize,en->entry->storagemethod);
+		printf("id: %s\t%s from %s\tsize:%5d/%5d\tstorage: %s\n",en->id,en->entry->entry,en->entry->mainfile,en->entry->size,en->entry->compressedsize,en->entry->storagemethod);
 	}
 	jcr6_free(j);
 	// */
