@@ -4,7 +4,8 @@
 fstorage = "Store"
 estorage = "Store" 
 comments = {
-	Hello = "Hello World!"
+	Hello = "Hello World!",
+	Lied = "Ozewiesewozewiesewassakristassa Kirstosewiesewosewiese wies wies wies wies!"
 }
 
 files = {
