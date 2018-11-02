@@ -563,7 +563,18 @@ void jcr6_free(jcr6_TDir j){
 		if (ENode->prev!=NULL) free(ENode->prev);
 		LENode=ENode;
 	}
-	free(LENode); // despose the last entry
+  free(LENode); // despose the last entry
+
+  // dispose all comments (and don't forget the memory used to hold the comments themselves)
+  jcr6_TComment LComment;
+  for (jcr6_TComment EComment=j->FirstComment;EComment!=NULL;EComment=EComment->next){ // Yeah, this is the closest you'll get to a "foreach" in C.
+		free(EComment->name);
+    free(EComment->comment);
+		if (EComment->prev!=NULL) free(EComment->prev);
+		LComment=LComment;
+	}
+  free(LComment); // despose the last entry
+
 	// dispose the map itself
 	free(j->Entries);
 	// dispose the object itself
