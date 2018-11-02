@@ -363,6 +363,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	bool theend = false;
 	jcr6_TEntryNode ENext;
 	ret->Entries = malloc(sizeof(struct tjcr6_TEntryMap));
+  ret->FirstComment=NULL;
 	do{
 		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
