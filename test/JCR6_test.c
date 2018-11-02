@@ -40,7 +40,7 @@ int main(void){
 	printf("\n");
 	//jcr6_TDirEntryNode en;
 	foreach_entries(en,j){
-		printf("id: %s\t%s from %s\tsize:%5d/%5d\tstorage: %s\n",en->id,en->entry->entry,en->entry->mainfile,en->entry->size,en->entry->compressedsize,en->entry->storagemethod);
+		printf("id: %s\t%s from %s\tsize:%5d/%5d\toffset: %X\tstorage: %s\n",en->id,en->entry->entry,en->entry->mainfile,en->entry->size,en->entry->compressedsize,en->entry->offset,en->entry->storagemethod);
 	}
 	jcr6_free(j);
 	// */
