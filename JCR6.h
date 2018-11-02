@@ -29,7 +29,7 @@
 // Entry mapping
 typedef struct tjcr6_TEntry {
 	char entry[JCR6_MAX_CFGSTRING];
-	char mainfile[JCR6_MAX_CFGSTRING];
+	char * mainfile; //[JCR6_MAX_CFGSTRING];
 	int size;
 	int compressedsize;
 	int timestamp;

@@ -391,6 +391,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					jcr6_TEntryNode ENode = malloc(sizeof(struct tjcr6_TEntryNode));
 					ENode->next=NULL;
 					ENode->entry=E;
+          E->mainfile=myfile; // Yeah I'll just copy the pointer. It´s very idiotic to change the content of this string anyway (unless you LOVE crashes) and this way we even save memory XD
 					if (first) {
 						chat("= First dir map node");
 						ret->Entries->first = ENode;
@@ -419,6 +420,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 								if (strcmp(fkey,"__Entry")==0) {
 									for(int i=0;i<JCR6_MAX_CFGSTRING && fstring[i];i++){
 										ENode->id[i]=toupper(fstring[i]);
+                    ENode->id[i+1]=0;
 									} mchat(2,"= Current entry node identified as ",ENode->id);
 									strcpy(E->entry,fstring);
 								} else if (strcmp(fkey,"__Storage")==0) {
