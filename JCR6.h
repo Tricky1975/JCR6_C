@@ -146,6 +146,7 @@ typedef struct tbufread{
 #define jcr_newDirDriver malloc(sizeof(jcr6_TDirDriver));
 
 #define foreach_entries(EntryNode,jdir) for(jcr6_TEntryNode EntryNode=jdir->Entries->first; EntryNode!=NULL; EntryNode=EntryNode->next)
+#define foreach_comments(Comment,jdir) for(jcr6_TComment Comment=jdir->firstcomment;Comment!=NULL;Comment=Comment->next)
 
 // function headers
 void jcr6_registercompressiondriver(char * id,jcr6_TCompressDriver d);
