@@ -363,8 +363,8 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	bool theend = false;
 	jcr6_TEntryNode ENext;
 	ret->Entries = malloc(sizeof(struct tjcr6_TEntryMap));
-  ret->FirstComment=NULL;
-  jcr6_TComment lastcomment=NULL;
+	ret->FirstComment=NULL;
+	jcr6_TComment lastcomment=NULL;
 	do{
 		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
@@ -393,7 +393,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 					jcr6_TEntryNode ENode = malloc(sizeof(struct tjcr6_TEntryNode));
 					ENode->next=NULL;
 					ENode->entry=E;
-          E->mainfile=myfile; // Yeah I'll just copy the pointer. It´s very idiotic to change the content of this string anyway (unless you LOVE crashes) and this way we even save memory XD
+					E->mainfile=myfile; // Yeah I'll just copy the pointer. It´s very idiotic to change the content of this string anyway (unless you LOVE crashes) and this way we even save memory XD
 					if (first) {
 						chat("= First dir map node");
 						ret->Entries->first = ENode;
@@ -456,7 +456,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 						}
 					} while (ftag!=0xff);
 				} else
-        if (strcmp(stag,"COMMENT")) {
+        if (strcmp(stag,"COMMENT")==0) {
           int l;
           if (lastcomment!=NULL){
             lastcomment->next = malloc(sizeof(struct tjcr6_TComment));
@@ -465,10 +465,12 @@ static jcr6_TDir dir_jcr6(char * myfile){
           } else {
             lastcomment = malloc(sizeof(struct tjcr6_TComment));
             lastcomment->prev = NULL;
+            ret->FirstComment=lastcomment;
           }
           lastcomment->next = NULL;
           l = buf_readint(buf); lastcomment->name    = malloc(l+1); for (int i=0;i<l;i++) {lastcomment->name   [i]=buf_read(buf); lastcomment->name   [i+1]=0; }
           l = buf_readint(buf); lastcomment->comment = malloc(l+1); for (int i=0;i<l;i++) {lastcomment->comment[i]=buf_read(buf); lastcomment->comment[i+1]=0; }
+          mchat(4,"COMMENT:",lastcomment->name,">>",lastcomment->comment);
         }
 				break;
 			default:
@@ -568,12 +570,18 @@ void jcr6_free(jcr6_TDir j){
   // dispose all comments (and don't forget the memory used to hold the comments themselves)
   jcr6_TComment LComment;
   for (jcr6_TComment EComment=j->FirstComment;EComment!=NULL;EComment=EComment->next){ // Yeah, this is the closest you'll get to a "foreach" in C.
+	    mchat(4,"= FREE COMMENT:",EComment->name,">>",EComment->comment);
+	    chat("  = name");
 		free(EComment->name);
-    free(EComment->comment);
+		chat("  = comment");
+		free(EComment->comment);
+		chat("  = prev (if existent)");
 		if (EComment->prev!=NULL) free(EComment->prev);
-		LComment=LComment;
+		LComment=EComment;
+		chat("  = Done");
 	}
   free(LComment); // despose the last entry
+  chat("= All done");
 
 	// dispose the map itself
 	free(j->Entries);
