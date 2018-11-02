@@ -68,3 +68,9 @@ test_JCR_MAC
 test_JCR_WINDOWS.exe
 test_JCR_LINUX
 
+# test script generated stuff
+jcr_testscript.JCR6_Instructions
+jcr_testscript.SavedVars.JCR6_Instructions
+jcr_testscript.SavedVars.SavedVars.lua
+jcr_testscript.SavedVars.lua
+jcr_testscript.jif
