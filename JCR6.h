@@ -60,7 +60,7 @@ typedef struct tjcr6_TComment {
 	struct tjcr6_TComment * next;
 	char * name;
 	char * comment;
-} jcr6_TComment;
+} * jcr6_TComment;
 
 typedef struct tjcr6_TDir {
 	jcr6_TEntryMap * Entries;

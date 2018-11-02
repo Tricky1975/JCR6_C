@@ -364,6 +364,7 @@ static jcr6_TDir dir_jcr6(char * myfile){
 	jcr6_TEntryNode ENext;
 	ret->Entries = malloc(sizeof(struct tjcr6_TEntryMap));
   ret->FirstComment=NULL;
+  jcr6_TComment lastcomment=NULL;
 	do{
 		chat("= New read cycle");
 		if (buf->position>=buf->size) { yell("FAT out of bounds. Must be missing a proper ending tag!"); break; }
@@ -454,7 +455,21 @@ static jcr6_TDir dir_jcr6(char * myfile){
 								break;
 						}
 					} while (ftag!=0xff);
-				}
+				} else
+        if (strcmp(stag,"COMMENT")) {
+          int l;
+          if (lastcomment!=NULL){
+            lastcomment->next = malloc(sizeof(struct tjcr6_TComment));
+            lastcomment->next->prev=lastcomment;
+            lastcomment=lastcomment->next;
+          } else {
+            lastcomment = malloc(sizeof(struct tjcr6_TComment));
+            lastcomment->prev = NULL;
+          }
+          lastcomment->next = NULL;
+          l = buf_readint(buf); lastcomment->name    = malloc(l+1); for (int i=0;i<l;i++) {lastcomment->name   [i]=buf_read(buf); lastcomment->name   [i+1]=0; }
+          l = buf_readint(buf); lastcomment->comment = malloc(l+1); for (int i=0;i<l;i++) {lastcomment->comment[i]=buf_read(buf); lastcomment->comment[i+1]=0; }
+        }
 				break;
 			default:
 				if (jcr6_yell) printf("EEKS! %3d <--- what's this?\n",tag);
