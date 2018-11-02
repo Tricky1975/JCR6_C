@@ -23,7 +23,7 @@
 
 
 int main(void){
-	//jcr6_chat=true; // This is a debugging session after all!
+	jcr6_chat=true; // This is a debugging session after all!
 	printf(" node = %ld\n",sizeof( jcr6_TCompressionDriveNode));
 	printf("*node = %ld\n",sizeof(struct tjcr6_TCompressionDriveNode));
 	char rc[10];
@@ -40,8 +40,8 @@ int main(void){
 	printf("\n");
 	//jcr6_TDirEntryNode en;
 	foreach_comments(cmt,j){
-		printf("%s\n",cmt);
-		for (int i=0;cmt[i];i++) printf("="); printf("\n");
+		printf("%s\n",cmt->name);
+		for (int i=0;cmt->name[i];i++) printf("="); printf("\n%s\n\n",cmt->comment);
 	}
 	foreach_entries(en,j){
 		printf("id: %s\t%s from %s\tsize:%5d/%5d\toffset: %X\tstorage: %s\n",en->id,en->entry->entry,en->entry->mainfile,en->entry->size,en->entry->compressedsize,en->entry->offset,en->entry->storagemethod);
