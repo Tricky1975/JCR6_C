@@ -64,7 +64,7 @@ typedef struct tjcr6_TComment {
 
 typedef struct tjcr6_TDir {
 	jcr6_TEntryMap * Entries;
-	jcr6_TComment * FirstComment;
+	jcr6_TComment FirstComment;
 	// Only put in for use by the JCR6 format driver, but I guess WAD can also benefit from this.
 	int fat_offset;
 	int fat_size;
