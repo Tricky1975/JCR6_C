@@ -55,8 +55,16 @@ typedef struct tjcr6_TEntryMap{
 
 	} jcr6_TEntryMap;
 
+typedef struct tjcr6_TComment {
+	struct tjcr6_TComment * prev;
+	struct tjcr6_TComment * next;
+	char * name;
+	char * comment;
+} jcr6_TComment;
+
 typedef struct tjcr6_TDir {
 	jcr6_TEntryMap * Entries;
+	jcr6_TComment * FirstComment;
 	// Only put in for use by the JCR6 format driver, but I guess WAD can also benefit from this.
 	int fat_offset;
 	int fat_size;
@@ -130,6 +138,7 @@ typedef struct tbufread{
 	bool littleendian; // true when LittleEndian false when BigEndian
 	char * buffer;
 } * bufread;
+
 
 
 // macro
