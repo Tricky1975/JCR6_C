@@ -3,9 +3,9 @@
 // JCR6_test.c
 // This particular file has been released in the public domain
 // and is therefore free of any restriction. You are allowed
-// to credit me as the original author, but this is not
+// to credit me as the original author, but this is not 
 // required.
-// This file was setup/modified in:
+// This file was setup/modified in: 
 // 2018
 // If the law of your country does not support the concept
 // of a product being released in the public domain, while
@@ -14,8 +14,8 @@
 // "(c) Jeroen Broks - licensed under the CC0 License",
 // with basically comes down to the same lack of
 // restriction the public domain offers. (YAY!)
-// ***********************************************************
-// Version 18.10.31
+// *********************************************************** 
+// Version 18.11.03
 // EndLic
 
 #include <stdio.h>
@@ -23,7 +23,7 @@
 
 
 int main(void){
-	jcr6_chat=true; // This is a debugging session after all!
+	//jcr6_chat=true; // This is a debugging session after all!
 	printf(" node = %ld\n",sizeof( jcr6_TCompressionDriveNode));
 	printf("*node = %ld\n",sizeof(struct tjcr6_TCompressionDriveNode));
 	char rc[10];
@@ -46,6 +46,8 @@ int main(void){
 	foreach_entries(en,j){
 		printf("id: %s\t%s from %s\tsize:%5d/%5d\toffset: %X\tstorage: %s\n",en->id,en->entry->entry,en->entry->mainfile,en->entry->size,en->entry->compressedsize,en->entry->offset,en->entry->storagemethod);
 	}
+	char * r = jcr6_B(j,"readme.md");
+	printf("\n\nreadme.md contains:\n%s\n<EOF>\n\n\n\n\n\n",r);
 	jcr6_free(j);
 	// */
 	jcr6_dispose();

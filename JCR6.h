@@ -1,7 +1,7 @@
 // Lic:
 //   JCR6.h
 //   JCR6 for C
-//   version: 18.10.31
+//   version: 18.11.03
 //   Copyright (C) 2018 Jeroen P. Broks
 //   This software is provided 'as-is', without any express or implied
 //   warranty.  In no event will the authors be held liable for any damages
@@ -156,6 +156,11 @@ void jcr6_free(jcr6_TDir j);
 void jcr6_dispose(void);
 bool jcr6_Recognize(char * myfile);
 jcr6_TCompressDriver jcr6_GetCompressionDriver(char * id); // I doubt you'll ever need this outside the JCR6 library, but what the heck!
+
+jcr6_TEntry jcr6_getentry(jcr6_TDir j,char * myentry);
+void * jcr6_trueb(jcr6_TEntry e);
+void * jcr6_B(jcr6_TDir j,char *myentry);
+bufread jcr6_start(jcr6_TDir j, char *myentry);
 
 // buffer read functions
 bufread buf_start(char * buffer, int size);

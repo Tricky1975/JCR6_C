@@ -1,7 +1,7 @@
 // Lic:
 //   JCR6.c
 //   JCR6 for C
-//   version: 18.10.31
+//   version: 18.11.03
 //   Copyright (C) 2018 Jeroen P. Broks
 //   This software is provided 'as-is', without any express or implied
 //   warranty.  In no event will the authors be held liable for any damages
@@ -555,6 +555,49 @@ void jcr6_init(void){
 	chat("= Registering");
 	jcr6_registerdirdriver("JCR6",DJCR);
 }
+
+jcr6_TEntry jcr6_getentry(jcr6_TDir j,char * myentry){
+	// TODO: If you got a faster way to do this... please be my guest :P
+	char cap_myentry[JCR6_MAX_CFGSTRING];
+	for(int i=0;i<JCR6_MAX_CFGSTRING-1 && myentry[i];i++) {
+		cap_myentry[i]=toupper(myentry[i]);
+		cap_myentry[i+1]=0;
+	}
+	foreach_entries(en,j){
+		if (strcmp(en->id,cap_myentry)==0) return en->entry;
+	}
+	return NULL;
+}
+
+void * jcr6_trueb(jcr6_TEntry e){
+	FILE *bt = fopen(e->mainfile,"rb");
+	fseek(bt,e->offset,SEEK_SET);
+	char * compressedbuffer = malloc(e->compressedsize);
+	char * expandedbuffer;
+	fread(compressedbuffer,e->compressedsize,1,bt);
+	jcr6_TCompressDriver storagedriver = jcr6_GetCompressionDriver(e->storagemethod);
+	if (storagedriver->destroyoriginal) {
+		storagedriver->expand(compressedbuffer,e->compressedsize,expandedbuffer,e->size);
+		free(compressedbuffer); chat("= Destroying packed data as we no longer need that");
+	} else {
+		chat("= Keeping packed data. Apparently it's still required!");
+		expandedbuffer=compressedbuffer;
+	}
+	return expandedbuffer;
+}
+
+void * jcr6_B(jcr6_TDir j,char *myentry){
+	jcr6_TEntry e = jcr6_getentry(j,myentry);
+	if (e==NULL) { yell("Entry not found!"); return NULL; }
+	return jcr6_trueb(e);
+}
+bufread jcr6_start(jcr6_TDir j, char *myentry){
+	jcr6_TEntry e = jcr6_getentry(j,myentry);
+	if (e==NULL) { yell("Entry not found!"); return NULL; }
+	return buf_start(jcr6_trueb(e),e->size);
+}
+
+
 
 // Free JCR dir (and all data it contains in sub branches)
 void jcr6_free(jcr6_TDir j){
