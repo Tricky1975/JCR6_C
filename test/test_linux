@@ -1,4 +1,5 @@
 #!/bin/sh
-gcc *.c ../*.c -o test_JCR_LINUX
+c99 *.c ../*.c -o test_JCR_LINUX
+#gcc *.c ../*.c -o test_JCR_LINUX
 #./test_JCR_LINUX
 
