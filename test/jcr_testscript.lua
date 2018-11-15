@@ -19,6 +19,7 @@ Version 18.11.03
 ]]
 -- This lua script is solely used to quickly create a JCR file I can use to 
 -- test JCR6 out in C
+-- Also note that the folder setup has been set to match my own file system on my current working device (mac), so it may need adaption to work on yours (or when I switch to another OS).
 
 fstorage = "Store"
 estorage = "Store" 
